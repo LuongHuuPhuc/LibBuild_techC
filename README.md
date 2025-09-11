@@ -61,12 +61,21 @@ ar rcs libmylib.a mylib.o
 - Khi đó sẽ sinh ra 1 file `.o` và 1 file `.a`
 - Sau khi build xong thư viện, nếu file build đó nằm cùng cấp với file `main.c` thì dùng lệnh sau để link:
 ```bash
-gcc main.c -L. -lmylib -o main
+gcc -Wall -I. main.c -L. -lmylib -o main
 ```
 
 - Nếu file build đó nằm trong folder khác: 
 ```bash 
-gcc main.c -L./[folder] -lmylib -o main 
+gcc -Wall -I../folder main.c -L../folder -lmylib -o main 
+```
+- Lệnh trên sẽ sinh ra luôn file thực thi `.exe` của chương trình sau khi đã liên kết với thư viện. Còn nếu muốn sinh file `.o` trước rồi mới sinh file thực thi để chi tiết, dễ hiểu hơn thì dùng lệnh `gcc -c main.c -o main.o` và quan trọng, để main.c thấy được thư viện thì cần phải thêm: 
+```bash
+# -Wall: Warining all - Hiển thị cảnh cáo nếu có (có thể thêm hoặc không)
+# -I.: Chỉ thị để hướng trình biên dịch đến folder cần tìm
+gcc -Wall -I../folder -c main.c -o main.o
+
+# Linking main.o voi thu vien va tao tep thuc thi .exe
+gcc main.o -L../folder -lmyLib -o main
 ```
 
 ### Ví dụ ### 
