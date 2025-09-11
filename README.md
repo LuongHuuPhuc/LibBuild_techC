@@ -140,7 +140,7 @@ API void hello() {
 ```bash
 # Cach 1
 gcc -c DBUILD_DLL mylib.c -o mylib.o 
-gcc -shared -o mylib.dll mylib.o -WL, --out-implib,libmylib.dll.a
+gcc -shared -o mylib.dll mylib.o -Wl,--out-implib,libmylib.dll.a
 ```
 - Lệnh trên sẽ làm 2 việc: 
     - `.c` -> Biên dịch thành file `.o` (chưa link) cho thư viện
@@ -163,7 +163,7 @@ gcc -DBUILD_DLL -shared -o mylib.dll mylib.c -Wl,--out-implib,libmylib.dll.a
 ```bash 
 gcc main.c -L. -lmylib -o main.exe 
 ```
-- Đặt mylib.dll cùng thư mục main.exe hoặc trong %PATH%
+- Sau khi sinh ra file `.dll`, PHẢI ĐẶT mylib.dll đó cùng thư mục main.c hoặc main.cpp thì mới biên dịch và chạy được
 
 ### Ví dụ ### 
 * Bạn build `libmath.a` chứa hàm `add()` 
