@@ -207,3 +207,73 @@ gcc main.c -L. -lmylib -o main.exe
     - *Định nghĩa cấu trúc (Struct/Class)*: Khai báo cấu trúc dữ liệu, lớp, `typedef`, `struct`, `enum`,...
     - *Định nghĩa macro*: Các hằng số và định nghĩa macro sử dụng `#define` 
 - Nên tránh: Không nên chứa các định nghĩa hàm thực tế (function implementations) trong tệp header vì điều này sẽ gây ra xung đột khi tệp header được `#include` nhiều lần
+
+# CÁC **OPTION** ĐỂ ĐIỀU KHIỂN COMPILE PIPELINE #
+Một chương trình C/C++ đi qua 4 giai đoạn:
+1. Preprocessing (tiền xử lý): xử lý `#include`, `#define`, macro,...
+2. Compilation (biên dịch): dịch C/C++ sang Assembly
+3. Assembly: Dịch từ Assembly sang file object `.o`
+4. Linking: Ghép các object file và binary -> Executable
+
+=> Các option `-E, -S, -c, -o, -I, -L, -l…` chính là để điều khiển pipeline này.
+
+## 1. Các chỉ thị quan trọng ##
+### Chỉ thị về pipeline ###
+- `-E`: Chỉ chạy **Preprocessor (tiền xử lý)**, xuất ra code sau khi xử lý `#include`, `#define`, macro
+```bash
+g++ -E main.cpp -o main.i
+```
+=> Xuất ra file `.i` (mã nguồn đã mở rộng macro nhưng chưa compile) 
+
+- `-S`: Chỉ dịch sang Assembly, không tạo object file
+```bash
+g++ -S main.cpp -o main.s
+```
+=> Xuất ra file `.s` (assembly code)
+
+- `-c`: Chỉ compile + assemble, không link 
+```bash
+g++ -c main.cpp -o main.o
+```
+=> Xuất ra file `.o` (object code)
+
+- `.o`: Chỉ định tên file output
+```bash
+g++ main.o -o outfile_file
+```
+
+## 2. Chỉ thị liên quan đến Library ##
+- `-I <dir>`: Thêm đường dẫn để tìm header files khi `#include`
+```bash
+g++ -I../include main.cpp -o main
+```
+
+- `L <dir>`: Link với thư viện `<libname>.a` hoặc `<libname>.so`
+```bash
+g++ main.o -L../lib -lmylib -o main
+```
+
+- `-l<name>`: Link với thư viện `lib<name>.a` hoặc `lib<name>.so`
+```bash
+g++ main.o -L../lib -lmyLib -o main 
+```
+=> Sẽ tìm ..`/lib/libmylib.a` hoặc ../lib/libmylib.so`
+
+## 3. Chỉ thị tối ưu hóa & debug ##
+- `-O0`/`-O1`/`-O2`/`-O3`/`-Ofast`: Mức độ tối ưu hóa (`-O0` = tắt, `-O3` = mạnh nhất)
+- `-g`: Sinh thông tin debug để dùng với GDB
+- `-Wall`: Bật tất cả warning cơ bản 
+- `Wextra`: Bật thêm nhiều warining chi tiết hơn
+
+## 4. Chỉ thị về ngôn ngữ/chuẩn ##
+- `-std=c++20`/`-std=c++17`/`-std=c++14`/`-std=c++11`/: Chọn chuẩn để compile 
+```bash
+g++ -std=c++17 main.cpp -o main
+```
+- `-ansi`: Bật chuẩn ANSI C/C++ (giới hạn nhiều extension)
+
+## 5. Chỉ thị về linking nâng cao ## 
+- `-static`: Link static hoàn toàn (dùng `.a`, không dùng `.so`)
+- `-shared`: Tạo shared library `.so`
+- `-fPIC`: Sinh code "Position independent" (bắt buộc khi build shared lib)
+- `-pthread`: Link với thư viện pthread (dùng thread)
