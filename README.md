@@ -237,7 +237,7 @@ g++ -c main.cpp -o main.o
 ```
 => Xuất ra file `.o` (object code)
 
-- `.o`: Chỉ định tên file output
+- `-o`: Chỉ định tên file output
 ```bash
 g++ main.o -o outfile_file
 ```
